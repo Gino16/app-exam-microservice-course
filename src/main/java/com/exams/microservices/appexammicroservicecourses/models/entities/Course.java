@@ -1,5 +1,6 @@
 package com.exams.microservices.appexammicroservicecourses.models.entities;
 
+import com.exams.microservices.appexamlibcommonexams.models.entities.Exam;
 import com.exams.microservices.libcommonstudents.models.entities.Student;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,13 +11,14 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotEmpty;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
@@ -29,6 +31,7 @@ public class Course {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @NotEmpty
   private String name;
 
   @Column(name = "create_at")
@@ -38,8 +41,12 @@ public class Course {
   @OneToMany(fetch = FetchType.LAZY)
   private List<Student> students;
 
+  @ManyToMany(fetch = FetchType.LAZY)
+  private List<Exam> exams;
+
   public Course() {
     this.students = new ArrayList<>();
+    this.exams = new ArrayList<>();
   }
 
   @PrePersist
@@ -55,4 +62,11 @@ public class Course {
     this.students.remove(student);
   }
 
+  public void addExams(Exam exam) {
+    this.exams.add(exam);
+  }
+
+  public void removeExams(Exam exam) {
+    this.exams.remove(exam);
+  }
 }
