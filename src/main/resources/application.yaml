@@ -6,6 +6,7 @@ spring:
   cloud:
     config:
       profile: dev
+      label: db-per-service
 
 server:
   port: ${PORT:0}
