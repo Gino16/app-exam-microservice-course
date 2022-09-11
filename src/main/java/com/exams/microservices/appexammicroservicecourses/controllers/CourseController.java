@@ -74,7 +74,22 @@ public class CourseController extends GenericController<CourseService, Course> {
 
   @GetMapping("/student/{id}")
   public ResponseEntity<?> findCourseByStudentId(@PathVariable Long id) {
-    return ResponseEntity.ok().body(this.service.findCourseByStudentId(id));
+    Course course = this.service.findCourseByStudentId(id);
+    if (course == null) {
+      return ResponseEntity.notFound().build();
+    }
+
+    List<Long> examIds = (List<Long>) this.service.getExamsIdsWithAnswersByStudent(id);
+
+    List<Exam> exams = course.getExams().stream().peek(exam -> {
+      if (examIds.contains(exam.getId())) {
+        exam.setAnswered(true);
+      }
+    }).toList();
+
+    course.setExams(exams);
+
+    return ResponseEntity.ok().body(course);
   }
 
   @PutMapping("/{id}/assign-exams")
