@@ -41,7 +41,7 @@ public class Course {
   @Temporal(TemporalType.TIMESTAMP)
   private Date createAt;
 
-  @JsonIgnoreProperties(value = {"courses", "handler",
+  @JsonIgnoreProperties(value = {"course", "handler",
       "hibernateLazyInitializer"}, allowSetters = true)
   @OneToMany(mappedBy = "course", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   private List<CourseStudent> courseStudents;

@@ -7,6 +7,7 @@ import com.exams.microservices.appexammicroservicecourses.services.CourseService
 import com.exams.microservices.libcommonmicroservices.controllers.GenericController;
 import com.exams.microservices.libcommonstudents.models.entities.Student;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import javax.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -137,7 +138,9 @@ public class CourseController extends GenericController<CourseService, Course> {
     }
 
     List<Long> examIds = (List<Long>) this.service.getExamsIdsWithAnswersByStudent(id);
-
+    if (Objects.isNull(examIds) || examIds.isEmpty()) {
+      return ResponseEntity.ok(course);
+    }
     List<Exam> exams = course.getExams().stream().peek(exam -> {
       if (examIds.contains(exam.getId())) {
         exam.setAnswered(true);
